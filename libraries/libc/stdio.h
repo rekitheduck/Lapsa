@@ -4,6 +4,7 @@
 #include <stddef.h>
 
 typedef int FILE;
+typedef int off_t;
 
 FILE *stderr;
 FILE *stdin;
