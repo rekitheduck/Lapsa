@@ -119,11 +119,16 @@ popd
 
 # Build binutils
 pushd "${META_DIR}/toolchain-build/binutils"
-echo -e "Configuring ${GREEN}${BINUTILS_PACKAGE}${NC} ..."
-${META_DIR}/toolchain-src/$BINUTILS/configure --target=$TARGET --prefix=$PREFIX --with-sysroot=$SYSROOT_DIR --disable-nls --enable-gprofng=no --enable-shared || exit 1
-echo -e "Building ${GREEN}${BINUTILS_PACKAGE}${NC} ..."
-make MAKEINFO=true -j20 || exit 1
-make install || exit 1
+if ! test -f "${PREFIX}/bin/i586-elf-lapsa-as"; then
+    echo -e "Configuring ${GREEN}${BINUTILS_PACKAGE}${NC} ..."
+    ${META_DIR}/toolchain-src/$BINUTILS/configure --target=$TARGET --prefix=$PREFIX --with-sysroot=$SYSROOT_DIR --disable-nls --enable-gprofng=no --enable-shared || exit 1
+    echo -e "Building ${GREEN}${BINUTILS_PACKAGE}${NC} ..."
+    make MAKEINFO=true -j14 || exit 1
+    make install || exit 1
+    popd
+else
+    echo -e "Skipping building ${GREEN}${BINUTILS}${NC} - already built!"
+fi
 
 ####### GCC
 
