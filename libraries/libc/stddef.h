@@ -2,4 +2,4 @@
 
 #define NULL 0
 
-typedef unsigned int size_t;
+typedef __SIZE_TYPE__ size_t; // GCC-specific
