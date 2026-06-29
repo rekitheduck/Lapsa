@@ -1,6 +1,6 @@
-diff -Naur a/config.sub b/config.sub
+diff --color -Naur a/config.sub b/config.sub
 --- a/config.sub	2023-07-27 11:13:03.000000000 +0300
-+++ b/config.sub	2025-01-02 00:28:11.570619368 +0200
++++ b/config.sub	2026-06-29 17:51:00.363941876 +0300
 @@ -1749,7 +1749,7 @@
  	     | onefs* | tirtos* | phoenix* | fuchsia* | redox* | bme* \
  	     | midnightbsd* | amdhsa* | unleashed* | emscripten* | wasi* \
@@ -10,11 +10,11 @@ diff -Naur a/config.sub b/config.sub
  		;;
  	# This one is extra strict with allowed versions
  	sco3.2v2 | sco3.2v[4-9]* | sco5v6*)
-diff -Naur a/fixincludes/mkfixinc.sh b/fixincludes/mkfixinc.sh
+diff --color -Naur a/fixincludes/mkfixinc.sh b/fixincludes/mkfixinc.sh
 --- a/fixincludes/mkfixinc.sh	2023-07-27 11:13:03.000000000 +0300
-+++ b/fixincludes/mkfixinc.sh	2025-01-02 00:53:26.803726403 +0200
++++ b/fixincludes/mkfixinc.sh	2026-06-29 18:11:58.294141391 +0300
 @@ -11,6 +11,8 @@
-
+ 
  # Check for special fix rules for particular targets
  case $machine in
 +    *-lapsa* | \
@@ -22,9 +22,9 @@ diff -Naur a/fixincludes/mkfixinc.sh b/fixincludes/mkfixinc.sh
      i?86-*-cygwin* | \
      i?86-*-mingw32* | \
      x86_64-*-mingw32* | \
-diff -Naur a/gcc/config/lapsa.h b/gcc/config/lapsa.h
+diff --color -Naur a/gcc/config/lapsa.h b/gcc/config/lapsa.h
 --- a/gcc/config/lapsa.h	1970-01-01 03:00:00.000000000 +0300
-+++ b/gcc/config/lapsa.h	2025-01-02 00:39:37.838851233 +0200
++++ b/gcc/config/lapsa.h	2026-06-29 18:43:19.624469763 +0300
 @@ -0,0 +1,28 @@
 +/* Useful if you wish to make target-specific GCC changes. */
 +#undef TARGET_LAPSA
@@ -54,9 +54,9 @@ diff -Naur a/gcc/config/lapsa.h b/gcc/config/lapsa.h
 +    builtin_assert ("system=unix");   \
 +    builtin_assert ("system=posix");   \
 +  } while(0);
-diff -Naur a/gcc/config.gcc b/gcc/config.gcc
+diff --color -Naur a/gcc/config.gcc b/gcc/config.gcc
 --- a/gcc/config.gcc	2023-07-27 11:13:04.000000000 +0300
-+++ b/gcc/config.gcc	2025-01-02 00:37:16.870712230 +0200
++++ b/gcc/config.gcc	2026-06-29 18:00:16.964975305 +0300
 @@ -843,6 +843,13 @@
  *-*-fuchsia*)
    native_system_header_dir=/include
@@ -71,37 +71,37 @@ diff -Naur a/gcc/config.gcc b/gcc/config.gcc
  *-*-linux* | frv-*-*linux* | *-*-kfreebsd*-gnu | *-*-gnu* | *-*-kopensolaris*-gnu | *-*-uclinuxfdpiceabi)
    extra_options="$extra_options gnu-user.opt"
    gas=yes
-@@ -1126,6 +1133,9 @@
- esac
-
- case ${target} in
+@@ -1858,6 +1865,9 @@
+ 	tmake_file="${tmake_file} ${cpu_type}/t-darwin64-biarch t-slibgcc"
+ 	tm_file="${cpu_type}/darwin64-biarch.h ${tm_file} "
+ 	;;
 +i[34567]86-*-lapsa*)
-+    tm_file="${tm_file} i386/unix.h i386/att.h elfos.h glibc-stdint.h i386/i386elf.h lapsa.h"
-+    ;;
- aarch64*-*-elf | aarch64*-*-fuchsia* | aarch64*-*-rtems*)
- 	tm_file="${tm_file} elfos.h newlib-stdint.h"
- 	tm_file="${tm_file} aarch64/aarch64-elf.h aarch64/aarch64-errata.h aarch64/aarch64-elf-raw.h"
-diff -Naur a/libgcc/config.host b/libgcc/config.host
++	tm_file="${tm_file} i386/unix.h i386/att.h elfos.h glibc-stdint.h i386/i386elf.h lapsa.h gnu-user.h"
++	;;
+ i[34567]86-*-elfiamcu)
+ 	tm_file="${tm_file} i386/unix.h i386/att.h elfos.h newlib-stdint.h i386/iamcu.h"
+ 	;;
+diff --color -Naur a/libgcc/config.host b/libgcc/config.host
 --- a/libgcc/config.host	2023-07-27 11:13:07.000000000 +0300
-+++ b/libgcc/config.host	2025-01-02 00:51:51.191665684 +0200
-@@ -288,6 +288,10 @@
-     extra_parts="$extra_parts vtv_start.o vtv_end.o vtv_start_preinit.o vtv_end_preinit.o"
-   fi
-   ;;
++++ b/libgcc/config.host	2026-06-29 18:11:29.486726675 +0300
+@@ -386,6 +386,10 @@
+ esac
+ 
+ case ${host} in
 +i[34567]86-*-lapsa*)
-+  extra_parts="$extra_parts crti.o crtbegin.o crtend.o crtn.o"
-+  tmake_file="$tmake_file i386/t-crtstuff t-crtstuff-pic t-libgcc-pic"
-+  ;;
- *-*-lynxos*)
-   tmake_file="$tmake_file t-lynx $cpu_type/t-crtstuff t-crtstuff-pic t-libgcc-pic"
-   extra_parts="crtbegin.o crtbeginS.o crtend.o crtendS.o"
-diff -Naur a/libstdc++-v3/configure b/libstdc++-v3/configure
++	extra_parts="$extra_parts crti.o crtbegin.o crtend.o crtn.o"
++	tmake_file="$tmake_file i386/t-crtstuff t-crtstuff-pic t-libgcc-pic"
++	;;
+ aarch64*-*-elf | aarch64*-*-rtems*)
+ 	extra_parts="$extra_parts crtbegin.o crtend.o crti.o crtn.o"
+ 	extra_parts="$extra_parts crtfastmath.o"
+diff --color -Naur a/libstdc++-v3/configure b/libstdc++-v3/configure
 --- a/libstdc++-v3/configure	2023-07-27 11:13:08.000000000 +0300
-+++ b/libstdc++-v3/configure	2025-01-02 00:50:15.060766692 +0200
-@@ -47623,6 +47623,5980 @@
-
++++ b/libstdc++-v3/configure	2026-06-29 18:13:49.844703574 +0300
+@@ -48035,6 +48035,5979 @@
+ 
+   fi
      ;;
-
 +  *-lapsa*)
 +
 +  # All these tests are for C++; save the language and the compiler flags.
@@ -6075,24 +6075,22 @@ diff -Naur a/libstdc++-v3/configure b/libstdc++-v3/configure
 +  CXXFLAGS="$ac_save_CXXFLAGS"
 +
 +    ;;
-+
-   *-hpux*)
-     SECTION_FLAGS='-ffunction-sections -fdata-sections'
-
-diff -Naur a/libstdc++-v3/crossconfig.m4 b/libstdc++-v3/crossconfig.m4
+   *-linux* | *-uclinux* | *-gnu* | *-kfreebsd*-gnu | *-cygwin* | *-solaris*)
+ 
+   # All these tests are for C++; save the language and the compiler flags.
+diff --color -Naur a/libstdc++-v3/crossconfig.m4 b/libstdc++-v3/crossconfig.m4
 --- a/libstdc++-v3/crossconfig.m4	2023-07-27 11:13:08.000000000 +0300
-+++ b/libstdc++-v3/crossconfig.m4	2025-01-02 00:45:28.963393106 +0200
-@@ -141,6 +141,13 @@
-     AC_SUBST(SECTION_FLAGS)
++++ b/libstdc++-v3/crossconfig.m4	2026-06-29 18:06:12.335485797 +0300
+@@ -174,6 +174,12 @@
+ 
+     GCC_CHECK_TLS
      ;;
-
 +  *-lapsa*)
 +    GLIBCXX_CHECK_COMPILER_FEATURES
 +    GLIBCXX_CHECK_LINKER_FEATURES
 +    GLIBCXX_CHECK_MATH_SUPPORT
 +    GLIBCXX_CHECK_STDLIB_SUPPORT
 +    ;;
-+
-   *-hpux*)
-     SECTION_FLAGS='-ffunction-sections -fdata-sections'
-     AC_SUBST(SECTION_FLAGS)
+   *-linux* | *-uclinux* | *-gnu* | *-kfreebsd*-gnu | *-cygwin* | *-solaris*)
+     GLIBCXX_CHECK_COMPILER_FEATURES
+     GLIBCXX_CHECK_LINKER_FEATURES
