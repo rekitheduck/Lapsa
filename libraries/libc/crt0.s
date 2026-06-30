@@ -1,37 +1,25 @@
-# MEOW
-
-.intel_syntax prefix
-
 .section .text
 
 .global _start
+
 _start:
-    # Set up end of the stack frame linked list
-    movd ebp, 0
-    push ebp
-    push ebp
-    movd ebp, esp
+    xorl %ebp, %ebp # Should get set to 0 here as per SysV ABI
 
-    # We need those in a moment when we call main
-    push esi
-    push edi
+    popl %esi # pop argc
+    movl %esp, %ecx # store argv into ecx
 
-    # Prepare signals, memory allocation, stdio and such.
-    call initialize_standard_library
+    andl $0xfffffff0, %esp # align stack to 16-bytes bc of SSE
+    pushl %eax
 
-    # Run the global constructors.
-    call _init
+    # pushl %esp # prepare the stack # ???
 
-    # Restore argc and argv.
-    popd rdi
-    popd rsi
+    pushl %ecx # push argv
+    pushl %esi # push argc
+    pushl %edx # push function pointer for atexit
 
-    # Run main
-    call main
+    # Move to doing everything in libc
+    call __libc_start
 
-    # Terminate the process with the exit code.
-    movd eax, edi
-    call exit
+    int3 # enter a debugger if we somehow end up back here
+
 .size _start, . - _start
-
-.att_syntax prefix

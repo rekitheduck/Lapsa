@@ -7,6 +7,7 @@ extern "C" {
 #endif
 
 void abort(void);
+void exit(int);
 int atexit(void (*)(void));
 int atoi(const char*);
 void free(void*);
