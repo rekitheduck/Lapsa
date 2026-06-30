@@ -1,3 +1,7 @@
-project(libc LANGUAGES C)
+project(c LANGUAGES CXX)
 
-set(SOURCE_FILES main.cpp)
+
+add_library(c STATIC
+  "${CMAKE_CURRENT_SOURCE_DIR}/stdio.cpp"
+  "${CMAKE_CURRENT_SOURCE_DIR}/unistd.cpp"
+)
