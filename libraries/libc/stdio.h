@@ -7,9 +7,9 @@ typedef int FILE;
 typedef int off_t;
 typedef int pid_t;
 
-FILE* stderr;
-FILE* stdin;
-FILE* stdout;
+extern FILE* stdin;
+extern FILE* stdout;
+extern FILE* stderr;
 
 #define F_RDLCK 1
 #define F_RDLCK 2
