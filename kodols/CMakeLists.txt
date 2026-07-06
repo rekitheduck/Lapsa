@@ -4,6 +4,7 @@ set(SOURCES
     arch/i386/boot.s
     arch/i386/gdt.cpp
     arch/i386/main.cpp
+    devices/serial.cpp
 )
 
 set(LINKER_SCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/arch/i386/linker.ld")
@@ -15,5 +16,6 @@ add_link_options(-nostdlib)
 add_executable(kodols ${SOURCES})
 # TODO: Make sure linker.ld is tracked by cmake
 # set_target_properties(kodols PROPERTIES LINK_DEPENDS ${LINKER_SCRIPT})
+target_include_directories(kodols PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(kodols PRIVATE gcc)
