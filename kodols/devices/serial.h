@@ -2,6 +2,14 @@
 
 #include <stdint.h>
 
+uint32_t strlen(const char* str) {
+  uint32_t pos = 0;
+  while (str[pos] != '\0') {
+    pos++;
+  }
+  return pos;
+}
+
 // TODO: move these to somewhere x86-specific and generic to x86 IO, not just serial
 static inline void outb(uint16_t port, uint8_t val) {
   __asm__ volatile("outb %b0, %w1" : : "a"(val), "Nd"(port) : "memory");
@@ -9,6 +17,10 @@ static inline void outb(uint16_t port, uint8_t val) {
    * Wider immediate constants would be truncated at assemble-time (e.g. "i" constraint).
    * The  outb  %al, %dx  encoding is the only option for all other cases.
    * %1 expands to %dx because  port  is a uint16_t.  %w1 could be used if we had the port number a wider C type */
+}
+
+static inline void outw(uint16_t port, uint16_t val) {
+  __asm__ volatile("outw %w0, %w1" : : "a"(val), "Nd"(port) : "memory");
 }
 
 static inline uint8_t inb(uint16_t port) {
@@ -49,4 +61,10 @@ void write_serial(char a) {
   while (is_transmit_empty() == 0);
 
   outb(PORT, a);
+}
+
+void dmesg(const char* string) {
+  for (uint32_t i = 0; i < strlen(string); i++) {
+    write_serial(string[i]);
+  }
 }

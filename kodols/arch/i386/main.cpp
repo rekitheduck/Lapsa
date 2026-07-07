@@ -1,22 +1,28 @@
 // Kodols entrypoint :3
 
-#include "devices/serial.h"
 #include <stdint.h>
+
+#include "devices/serial.h"
+#include "gdt.h"
 
 extern "C" {
 
-extern void init_gdt(uint8_t* gdt_location);
+void update_gdt();
+
+void early_main() {
+  init_serial();
+  dmesg("\n\n");
+  dmesg("hellorld\n");
+
+  init_gdt();
+  dmesg("gdt initialized!\n");
+
+  // assuming we're on QEMU, we can shutdown with
+  outw(0x604, 0x2000);
+  // :3
+}
 
 void main() {
-  init_serial();
-  write_serial('h');
-  write_serial('e');
-  write_serial('l');
-  write_serial('l');
-  write_serial('o');
-  write_serial('r');
-  write_serial('l');
-  write_serial('d');
-  // :3
+  dmesg("back in main\n");
 }
 }
