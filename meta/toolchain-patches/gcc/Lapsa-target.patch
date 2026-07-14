@@ -33,7 +33,7 @@ diff --color -Naur a/gcc/config/lapsa.h b/gcc/config/lapsa.h
 +/* Default arguments you want when running your
 +   i686-lapsa-gcc/x86_64-lapsa-gcc toolchain */
 +#undef LIB_SPEC
-+#define LIB_SPEC "-lc" /* link against C standard library */
++#define LIB_SPEC "-lc %:remove-outfile(-lm)" /* link against C standard library */
 +
 +/* Files that are linked before user code.
 +   The %s tells GCC to look for these files in the library directory. */
@@ -76,7 +76,7 @@ diff --color -Naur a/gcc/config.gcc b/gcc/config.gcc
  	tm_file="${cpu_type}/darwin64-biarch.h ${tm_file} "
  	;;
 +i[34567]86-*-lapsa*)
-+	tm_file="${tm_file} i386/unix.h i386/att.h elfos.h glibc-stdint.h i386/i386elf.h lapsa.h gnu-user.h"
++	tm_file="${tm_file} i386/unix.h i386/att.h elfos.h glibc-stdint.h i386/i386elf.h gnu-user.h lapsa.h"
 +	;;
  i[34567]86-*-elfiamcu)
  	tm_file="${tm_file} i386/unix.h i386/att.h elfos.h newlib-stdint.h i386/iamcu.h"
