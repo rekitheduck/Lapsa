@@ -2,8 +2,6 @@
 
 namespace Kodols {
 
-void init_idt();
-
-void interrupt_handler();
+void initIDT();
 
 } // namespace Kodols

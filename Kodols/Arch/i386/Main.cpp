@@ -16,11 +16,11 @@ void early_main() {
   Kodols::dmesg("\n\n");
   Kodols::dmesg("hellorld\n");
 
-  init_gdt();
-  Kodols::dmesg("gdt initialized!\n");
+  Kodols::initGDT();
 
-  Kodols::init_idt();
-  Kodols::dmesg("idt initialized!\n");
+  Kodols::initIDT();
+
+  Kodols::dmesg("Welp, nothing else to do so let's go to sleep. goodnight :3\n");
 
   // assuming we're on QEMU, we can shutdown with
   outw(0x604, 0x2000);

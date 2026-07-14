@@ -2,4 +2,8 @@
 
 #include <stdint.h>
 
-void init_gdt();
+namespace Kodols {
+
+void initGDT();
+
+}
