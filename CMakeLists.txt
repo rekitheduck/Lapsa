@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.18)
 
 project(Lapsa
   DESCRIPTION "Lapsa Operating System"
@@ -16,7 +16,11 @@ set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
-add_subdirectory(libraries)
+enable_language(CXX)
+enable_language(ASM)
+
+add_subdirectory(Kodols)
+# add_subdirectory(Libraries)
 
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "Release cxx: ${CMAKE_CXX_FLAGS_RELEASE}")
