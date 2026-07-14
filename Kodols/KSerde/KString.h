@@ -5,8 +5,8 @@
 
 namespace KSerde {
 
-void* MemSet(void* dest, uint8_t ch, size_t count);
+void* memSet(void* dest, uint8_t ch, size_t count);
 
-uint32_t StrLen(const char* str);
+uint32_t strLen(const char* str);
 
 } // namespace KSerde

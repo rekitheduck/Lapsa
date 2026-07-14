@@ -65,7 +65,7 @@ void setDescriptor(size_t index, GateType type, void* isr_address) {
 
 void initIDT() {
   // Wipe the whole table
-  KSerde::MemSet(s_idt_descriptors, 0, 256);
+  KSerde::memSet(s_idt_descriptors, 0, 256);
 
   setDescriptor(0x00, GateType::InterruptGate, reinterpret_cast<void*>(&divideByZeroHandler));
   setDescriptor(0x01, GateType::TrapGate, reinterpret_cast<void*>(&debugHandler));
