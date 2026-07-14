@@ -5,7 +5,6 @@ set(SOURCES
     Arch/i386/GDT.cpp
     Arch/i386/IDT.cpp
     Arch/i386/ISRHandlers.cpp
-    Arch/i386/isr_wrapper.s
     Arch/i386/Main.cpp
     Devices/Serial.cpp
     KSerde/KString.cpp

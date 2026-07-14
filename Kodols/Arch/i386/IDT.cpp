@@ -7,7 +7,27 @@
 #include "KSerde/KString.h"
 
 extern "C" {
-extern void isr_wrapper();
+extern void divideByZeroHandler();
+extern void debugHandler();
+extern void NMIHandler();
+extern void breakpointHandler();
+extern void overflowHandler();
+extern void boundRangeHandler();
+extern void invalidOpcodeHandler();
+extern void noMathCoprocessorHandler();
+extern void doubleFaultHandler();
+extern void coprocessorSegmentOverrunHandler();
+extern void invalidTSSHandler();
+extern void segmentNotPresentHandler();
+extern void stackSegmentFaultHandler();
+extern void generalProtectionHandler();
+extern void pageFaultHandler();
+extern void x87MathFaultHandler();
+extern void alignmentCheckHandler();
+extern void machineCheckHandler();
+extern void SIMDFPHandler();
+extern void virtualizationHandler();
+extern void controlProtectionHandler();
 }
 
 namespace Kodols {
@@ -43,22 +63,39 @@ void setDescriptor(size_t index, GateType type, void* isr_address) {
   }
 }
 
-void init_idt() {
-  dmesg("Initializing IDT ...\n");
+void initIDT() {
   // Wipe the whole table
   KSerde::MemSet(s_idt_descriptors, 0, 256);
 
-  setDescriptor(0x00, GateType::InterruptGate, reinterpret_cast<void*>(&isr_wrapper));
+  setDescriptor(0x00, GateType::InterruptGate, reinterpret_cast<void*>(&divideByZeroHandler));
+  setDescriptor(0x01, GateType::TrapGate, reinterpret_cast<void*>(&debugHandler));
+  setDescriptor(0x02, GateType::InterruptGate, reinterpret_cast<void*>(&NMIHandler));
+  setDescriptor(0x03, GateType::TrapGate, reinterpret_cast<void*>(&breakpointHandler));
+  setDescriptor(0x04, GateType::TrapGate, reinterpret_cast<void*>(&overflowHandler));
+  setDescriptor(0x05, GateType::InterruptGate, reinterpret_cast<void*>(&boundRangeHandler));
+  setDescriptor(0x06, GateType::InterruptGate, reinterpret_cast<void*>(&invalidOpcodeHandler));
+  setDescriptor(0x07, GateType::InterruptGate, reinterpret_cast<void*>(&noMathCoprocessorHandler));
+  setDescriptor(0x08, GateType::InterruptGate, reinterpret_cast<void*>(&doubleFaultHandler));
+  setDescriptor(0x09, GateType::InterruptGate, reinterpret_cast<void*>(&coprocessorSegmentOverrunHandler));
+  setDescriptor(0x0A, GateType::InterruptGate, reinterpret_cast<void*>(&invalidTSSHandler));
+  setDescriptor(0x0B, GateType::InterruptGate, reinterpret_cast<void*>(&segmentNotPresentHandler));
+  setDescriptor(0x0C, GateType::InterruptGate, reinterpret_cast<void*>(&stackSegmentFaultHandler));
+  setDescriptor(0x0D, GateType::InterruptGate, reinterpret_cast<void*>(&generalProtectionHandler));
+  setDescriptor(0x0E, GateType::InterruptGate, reinterpret_cast<void*>(&pageFaultHandler));
+  // 0x0F: Intel reserved
+  setDescriptor(0x10, GateType::InterruptGate, reinterpret_cast<void*>(&x87MathFaultHandler));
+  setDescriptor(0x11, GateType::InterruptGate, reinterpret_cast<void*>(&alignmentCheckHandler));
+  setDescriptor(0x12, GateType::InterruptGate, reinterpret_cast<void*>(&machineCheckHandler));
+  setDescriptor(0x12, GateType::InterruptGate, reinterpret_cast<void*>(&SIMDFPHandler));
+  setDescriptor(0x12, GateType::InterruptGate, reinterpret_cast<void*>(&virtualizationHandler));
+  setDescriptor(0x12, GateType::InterruptGate, reinterpret_cast<void*>(&controlProtectionHandler));
+  // 0x16...0x1F: Intel reserved
 
   IDTR idtr;
   idtr.base = reinterpret_cast<uint32_t>(&s_idt_descriptors);
   idtr.limit = static_cast<uint32_t>(sizeof(InterruptDescriptor) * 256 - 1);
-  dmesg("setting IDTR ...\n");
 
   __asm__ volatile("lidt %0" : : "m"(idtr)); // load the new IDT
-  dmesg("success??\n");
-
-  int fail = 10 / 0;
 }
 
 } // namespace Kodols
